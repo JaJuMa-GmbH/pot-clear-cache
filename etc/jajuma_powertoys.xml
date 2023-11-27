@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author    JaJuMa GmbH <info@jajuma.de>
+ * @copyright Copyright (c) 2023 JaJuMa GmbH <https://www.jajuma.de>. All rights reserved.
+ * @license   http://opensource.org/licenses/mit-license.php MIT License
+ */
+-->
+
+<powertoys xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Jajuma_PowerToys:etc/jajuma_powertoys.xsd">
+    <quickaction id="flush_cache" class="Jajuma\PotCacheCleaner\Block\FlushCache">
+        <label translate="true">Flush Cache</label>
+        <arguments>
+            <argument name="enable">true</argument>
+            <argument name="action_type">button</argument>
+            <argument name="magewire">Jajuma\PotCacheCleaner\Magewire\FlushCache</argument>
+            <argument name="template">Jajuma_PotCacheCleaner::quick_flush_cache.phtml</argument>
+            <argument name="widget_icon">Jajuma_PowerToys::svg/heroicons/outline/trash.svg</argument>
+            <argument name="sort_order">10</argument>
+            <argument name="acl_resource">Magento_Backend::flush_cache_storage</argument>
+        </arguments>
+    </quickaction>
+</powertoys>

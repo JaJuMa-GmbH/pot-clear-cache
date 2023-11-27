@@ -1,0 +1,319 @@
+<?php
+
+/**
+ * @author    JaJuMa GmbH <info@jajuma.de>
+ * @copyright Copyright (c) 2023 JaJuMa GmbH <https://www.jajuma.de>. All rights reserved.
+ * @license   http://opensource.org/licenses/mit-license.php MIT License
+ */
+
+use Magento\Framework\Escaper;
+use Jajuma\PowerToys\Block\PowerToys\Quickaction;
+
+/** @var Quickaction $block */
+/** @var Escaper $escaper */
+$magewire = $block->getMagewire();
+?>
+<div class="action-item-content action-item-content-<?= $block->getBlockId() ?>" wire:loading.class="loading">
+    <img src="<?= $block->getIcon(); ?>"/>
+    <div class="status <?= $magewire->getCacheStatus() ?>"></div>
+    <a wire:click="cacheClear" onclick="clearCache(this)">
+        <?= $block->getData('name') ?>
+    </a>
+    <div class="powertoys-packman-loading">
+        <div class="powertoys-packman-track">
+            <div class="powertoys-packman-kurt">
+                <div class="powertoys-packman-loader"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function clearCache(el) {
+            let parent = el.closest('.action-item-content-<?= $block->getBlockId() ?>');
+            setTimeout(() => {
+                if (!parent.classList.contains('loading')) {
+                    parent.classList.add('loading');
+                    setTimeout(()=>{
+                        parent.classList.remove('loading');
+                    },1500)
+                }
+            },150)
+        }
+    </script>
+    <style>
+        .action-item-content-<?= $block->getBlockId() ?> .status {
+            position: relative;
+            height: 20px;
+        }
+
+        .action-item-content-<?= $block->getBlockId() ?> .status:after {
+            content: "";
+            width: 8px;
+            height: 8px;
+            position: absolute;
+            top: -3px;
+            right: -2px;
+            border-radius: 50%;
+            background: #68ef24;
+            border: 0.5px solid #6b6c74;
+        }
+
+        .action-item-content-<?= $block->getBlockId() ?> .invalidate:after {
+            background: #ef4444;
+            border: 0.5px solid transparent;
+        }
+
+        .action-item-content-<?= $block->getBlockId() ?> {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .action-item-content-<?= $block->getBlockId() ?>img {
+            border-width: 3.5px !important;
+        }
+
+        .action-item-content-<?= $block->getBlockId() ?>.loading {
+            pointer-events: none;
+        }
+
+        .action-item-content-<?= $block->getBlockId() ?>.loading img,
+        .action-item-content-<?= $block->getBlockId() ?>.loading a {
+            opacity: 0;
+        }
+
+        .action-item-content-<?= $block->getBlockId() ?>.loading:after {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            width: calc(100% + 2px);
+            height: calc(100% + 2px);
+            border-radius: 6px;
+            pointer-events: none;
+            background: var(--jajuma-develop-module);
+            border-radius: 6px;
+        }
+
+        .action-item-content-<?= $block->getBlockId() ?> a {
+            position: unset;
+            color: unset;
+            text-decoration: none;
+        }
+
+        .action-item-content-<?= $block->getBlockId() ?> a:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .powertoys-packman-loading {
+            display: flex;
+            text-align: center;
+            vertical-align: middle;
+            box-shadow: 0px 40px 60px -20px rgba(0, 0, 0, 0.2);
+            width: 0;
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .action-item-content-<?= $block->getBlockId() ?>.loading .powertoys-packman-loading {
+            opacity: 1;
+            width: calc(100% - 32px);
+        }
+
+        .powertoys-packman-track {
+            width: 100%;
+            height: 0px;
+            border-top: 2px dotted #fff;
+            display: inline-block;
+        }
+
+        .powertoys-packman-track:before {
+            content: "";
+            display: block;
+            position: relative;
+            border-top: 5px solid var(--jajuma-develop-module);
+            top: -3.5px;
+            width: 6px;
+            height: 4px;
+            -webkit-animation: shrink 3s linear infinite;
+            animation: shrink 3s linear infinite;
+        }
+
+        .powertoys-packman-kurt {
+            -webkit-animation: moveChomp 3s linear infinite;
+            animation: moveChomp 3s linear infinite;
+            background: pink;
+            width: 0px;
+            height: 0px;
+            position: relative;
+            top: -21px;
+        }
+
+        .powertoys-packman-loader {
+            background: none;
+            display: inline-block;
+            position: relative;
+        }
+
+        .powertoys-packman-loader:before,
+        .powertoys-packman-loader:after {
+            content: "";
+            display: block;
+            height: 0px;
+            width: 0px;
+            border: 10px solid #000;
+            border-radius: 50%;
+            border-right-color: transparent;
+            border-bottom-color: transparent;
+            position: absolute;
+            top: 50%;
+            transform: translateX(-50%);
+            margin-top: -7px;
+            animation: topchomp 0.5s ease-in-out infinite reverse;
+        }
+
+        .powertoys-packman-loader:after {
+            border-color: #000;
+            border-top-color: transparent;
+            border-right-color: transparent;
+            -webkit-animation: bottomchomp 0.5s ease-in-out infinite;
+            animation: bottomchomp 0.5s ease-in-out infinite;
+        }
+
+        @-webkit-keyframes shrink {
+
+            0%,
+            50% {
+                width: 0px;
+            }
+
+            50% {
+                transform: translateX(100%);
+            }
+
+            49%,
+            100% {
+                transform: translateX(0px);
+                width: 100%;
+            }
+        }
+
+        @keyframes shrink {
+
+            0%,
+            50% {
+                width: 0px;
+            }
+
+            50% {
+                transform: translateX(100%);
+            }
+
+            49%,
+            100% {
+                transform: translateX(0px);
+                width: 100%;
+            }
+        }
+
+        @-webkit-keyframes bottomchomp {
+
+            0%,
+            100% {
+                transform: rotate(10deg);
+            }
+
+            50% {
+                transform: rotate(-50deg);
+            }
+        }
+
+        @keyframes bottomchomp {
+
+            0%,
+            100% {
+                transform: rotate(10deg);
+            }
+
+            50% {
+                transform: rotate(-50deg);
+            }
+        }
+
+        @-webkit-keyframes topchomp {
+
+            0%,
+            100% {
+                transform: rotate(-20deg);
+            }
+
+            50% {
+                transform: rotate(37deg);
+            }
+        }
+
+        @keyframes topchomp {
+
+            0%,
+            100% {
+                transform: rotate(-20deg);
+            }
+
+            50% {
+                transform: rotate(37deg);
+            }
+        }
+
+        @-webkit-keyframes moveChomp {
+
+            0%,
+            100% {
+                left: 0%;
+            }
+
+            50% {
+                left: 100%;
+            }
+
+            0%,
+            49% {
+                transform: rotateY(0deg);
+            }
+
+            50%,
+            100% {
+                transform: rotateY(180deg);
+            }
+        }
+
+        @keyframes moveChomp {
+
+            0%,
+            100% {
+                left: 0%;
+            }
+
+            50% {
+                left: 100%;
+            }
+
+            0%,
+            49% {
+                transform: rotateY(0deg);
+            }
+
+            50%,
+            100% {
+                transform: rotateY(180deg);
+            }
+        }
+    </style>
+</div>
