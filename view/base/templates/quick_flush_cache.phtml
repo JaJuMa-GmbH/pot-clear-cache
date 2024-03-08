@@ -29,14 +29,36 @@ $magewire = $block->getMagewire();
     <script>
         function clearCache(el) {
             let parent = el.closest('.action-item-content-<?= $block->getBlockId() ?>');
+            let potPanel = document.querySelector('#jajuma-powertoys-floating-panel');
+            let flushCacheActions = document.querySelectorAll('.powertoys-action-item-flush_cache');
+
             setTimeout(() => {
                 if (!parent.classList.contains('loading')) {
                     parent.classList.add('loading');
                     setTimeout(()=>{
                         parent.classList.remove('loading');
-                    },1500)
+                    },1500);
                 }
-            },150)
+            },150);
+
+            var observer = new MutationObserver(function (event) {
+                if (!parent.classList.contains('loading')) {
+                    potPanel.classList.add('clearCacheSuccess');
+                    potPanel.classList.add('potStatusSuccess');
+
+                    setTimeout(function () {
+                        potPanel.classList.remove('clearCacheSuccess');
+                        potPanel.classList.remove('potStatusSuccess');
+                    }, 3000);
+                }
+            })
+
+            observer.observe(parent, {
+                attributes: true,
+                attributeFilter: ['class'],
+                childList: false,
+                characterData: false
+            })
         }
     </script>
     <style>
@@ -186,6 +208,66 @@ $magewire = $block->getMagewire();
             border-right-color: transparent;
             -webkit-animation: bottomchomp 0.5s ease-in-out infinite;
             animation: bottomchomp 0.5s ease-in-out infinite;
+        }
+
+        /* Favorite action icon */
+
+        .power-toys-favorite .action-item-content-flush_cache .powertoys-packman-loading {
+            display: none;
+        }
+
+        .power-toys-favorite .action-item-content-flush_cache {
+            gap: 0;
+        }
+
+        .power-toys-favorite .action-item-content-flush_cache .status {
+            position: absolute;
+            right: -2px;
+            top: 1px;
+        }
+
+        .power-toys-favorite .action-item-content-flush_cache .status:after {
+            top: -4px;
+            right: -3px;
+            border: 0.5px solid #333 !important;
+        }
+
+        .power-toys-favorite .action-item-content-flush_cache.loading:after {
+            -webkit-animation: cacheRotating 2s linear infinite;
+            width: 2px;
+            height: 50%;
+            background: #3d3d3d;
+            transform-origin: bottom;
+            top: -1px;
+            left: 9px;
+        }
+
+        .clearCacheSuccess .quickaction-item[data-action-id="flush_cache"] {
+            background: var(--jajuma-develop-status-success);
+        }
+
+        .clearCacheFail .quickaction-item[data-action-id="flush_cache"] {
+            background: var(--jajuma-develop-status-fail);
+        }
+
+        .clearCacheSuccess .powertoys-actions-list .quickaction-item[data-action-id="flush_cache"],
+        .clearCacheFail .powertoys-actions-list .quickaction-item[data-action-id="flush_cache"] {
+            overflow: hidden;
+            border-radius: 6px;
+        }
+
+        .clearCacheSuccess .powertoys-actions-list .powertoys-action-item-flush_cache,
+        .clearCacheFail .powertoys-actions-list .powertoys-action-item-flush_cache {
+            background: transparent !important;
+        }
+
+        @-webkit-keyframes cacheRotating {
+            from{
+                -webkit-transform: rotate(0deg);
+            }
+            to{
+                -webkit-transform: rotate(360deg);
+            }
         }
 
         @-webkit-keyframes shrink {
